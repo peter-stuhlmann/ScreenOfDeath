@@ -1,9 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import QR from '../assets/qr/qr-code.png';
 
 export default function Home() {
+  const [progress, setProgress] = useState(0);
+
+  const randomStep = Math.floor(Math.random() * 6) + 1;
+  const randomInterval = Math.floor(Math.random() * 1000);
+
+  useEffect(() => {
+    progress >= 0 &&
+      progress < 100 &&
+      setTimeout(() => setProgress(progress + randomStep), randomInterval);
+    progress > 100 && setProgress(100);
+  }, [randomInterval, randomStep, progress]);
+
+  progress === 100 &&
+    setTimeout(function () {
+      window.location.href = 'https://github.com/peter-stuhlmann/ScreenOfDeath';
+    }, 3000);
+
   return (
     <Container onContextMenu={(e) => e.preventDefault()}>
       <Content>
@@ -12,7 +29,7 @@ export default function Home() {
           Your PC ran into a problem and needs to restart. We're just collecting
           some error info, and then we'll restart for you.
         </Text>
-        <Text>20% complete</Text>
+        <Text>{progress}% complete</Text>
         <Footer>
           <QRCode src={QR} alt="QR" />
           <div>
